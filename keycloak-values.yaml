@@ -1,0 +1,12 @@
+tls:
+  enabled: true
+  existingSecret: creds
+  usePem: true
+
+service:
+  type: LoadBalancer
+
+auth:
+  adminUser: admin
+  adminPassword: password
+  
