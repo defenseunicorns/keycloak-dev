@@ -1,0 +1,34 @@
+kind: ZarfPackageConfig
+metadata:
+  name: keycloak-standalone
+  yolo: true
+
+# create CA cert
+# create keycloak cert
+# create client cert
+
+components:
+  - name: keycloak
+    required: true
+    charts:
+      - name: keycloak
+        url: oci://registry-1.docker.io/bitnamicharts/keycloak
+        version: 15.0.5
+        namespace: keycloak
+        valuesFiles:
+          - "keycloak-values.yaml"
+    files:
+      - source: tls.crt
+        target: tls.crt
+      - source: tls.key
+        target: tls.key
+    actions:
+      onDeploy:
+        defaults:
+          mute: true
+        before:
+          - cmd: |
+              echo "copying in the keystore"
+              kubectl create ns keycloak
+              kubectl create -n keycloak secret tls creds --key=tls.key --cert=tls.crt
+
